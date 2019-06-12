@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            font-size: medium;
+            line-height: 1.8em;
+            background: #f0f0f0;
+            margin: 10px;
+        }
+
+        div {
+            margin-bottom: 1em;
+            text-align: left
+        }
+
+        a {
+            white-space: nowrap;
+        }
+
+        .date {
+            height: 2em;
+            width: 12em;
+        }
+
+        .main {
+            margin-left: 18em;
+        }
+
+        #timeFrom {
+        }
+    </style>
+    <!--<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+        setInterval(function(){
+            var now = new Date();
+            //格式化日，如果小于9，前面补0
+            var day = ("0" + now.getDate()).slice(-2);
+            //格式化月，如果小于9，前面补0
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            //格式化时，如果小于9，前面补0
+            var hour = ("0" + now.getHours()).slice(-2);
+            //格式化分，如果小于9，前面补0
+            var min = ("0" + (now.getMinutes())).slice(-2);
+            //格式化秒，如果小于9，前面补0
+            var second = ("0" + (now.getSeconds())).slice(-2);
+            //拼装完整日期格式
+            var nowDate = now.getFullYear() + "-" + (month) + "-" + (day);
+            var nowTime = (hour) + ":" + (min) + ":" + (second);
+
+            var fromFlag = $("#fromFlag").val();
+            var toFlag = $("#toFlag").val();
+
+            if ("true" === fromFlag) {
+                $("#timeFrom").val(nowTime);
+            }
+            if ("true" === toFlag) {
+                $("#timeTo").val(nowTime);
+            }
+            $("#nowTime").val(nowTime);
+        }, 50);
+
+        function loadOld() {
+            var now = new Date();
+            //格式化日，如果小于9，前面补0
+            var day = ("0" + now.getDate()).slice(-2);
+            //格式化月，如果小于9，前面补0
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            //格式化时，如果小于9，前面补0
+            var hour = ("0" + now.getHours()).slice(-2);
+            //格式化分，如果小于9，前面补0
+            var min = ("0" + (now.getMinutes())).slice(-2);
+            //格式化秒，如果小于9，前面补0
+            var second = ("0" + (now.getSeconds())).slice(-2);
+            //拼装完整日期格式
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            var nowTime = (hour) + ":" + (min) + ":" + (second);
+
+            var temp = getCookie("dateTo");
+            if (temp != "") {
+                $("#dateTo").val(temp);
+            } else {
+                $('#dateTo').val(today);
+            }
+            temp = getCookie("dateFrom");
+            if (temp != "") {
+                $("#dateFrom").val(temp);
+            } else {
+                $('#dateFrom').val(today);
+            }
+
+            var temp = getCookie("timeTo");
+            if (temp != "") {
+                $("#timeTo").val(temp);
+            } else {
+                $('#timeTo').val(nowTime);
+            }
+            var temp = getCookie("timeFrom");
+            if (temp != "") {
+                $("#timeFrom").val(temp);
+            } else {
+                //$('#timeFrom').val(nowTime);
+            }
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires
+                + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function cal() {
+            var intervalCal = setInterval(function(){
+                var dateFrom = $("#dateFrom").val();
+                var dateTo = $("#dateTo").val();
+                var timeFrom = $("#timeFrom").val();
+                var timeTo = $("#timeTo").val();
+
+                setCookie("dateFrom", dateFrom, 30);
+                setCookie("dateTo", dateTo, 30);
+                setCookie("timeFrom", timeFrom, 30);
+                setCookie("timeTo", timeTo, 30);
+
+                var timeFromArray = timeFrom.split(":");
+                var timeToArray = timeTo.split(":");
+                var secTo = timeToArray[2];
+                var secFrom = timeFromArray[2];
+
+                if (secTo == "undefind" || secTo == null) {
+                    secTo = 0;
+                }
+                if (secFrom == "undefind" || secFrom == null) {
+                    secFrom = 0;
+                }
+
+
+                var decDate = new Date(dateTo) - new Date(dateFrom);
+                var decTime = ((timeToArray[0] * 60 * 60) + (timeToArray[1] * 60) + (secTo * 1)) - ((timeFromArray[0] * 60 * 60) + (timeFromArray[1] * 60) + (secFrom * 1));
+
+                var dayDec = Math.floor(decDate / 1000 / 60 / 60 / 24) + "天";
+                var hourDec = Math.floor(decTime / 60 / 60 % 60) + "小时";
+                var minDec = Math.floor(decTime / 60 % 60) + "分钟";
+                var secDec = Math.floor(decTime % 60) + "秒";
+
+                if (hourDec == "0小时") {
+                    minDec = "";
+                }
+                if (minDec == "0分钟") {
+                    minDec = "";
+                }
+                if (secDec == "0秒") {
+                    minDec = "";
+                }
+                if (dayDec == "0天") {
+                    dayDec = "";
+                }
+
+                if (decTime <= 0 && decDate <= 0) {
+                    $("#result").css("font-size", "50px");
+                    $("#result").html("就是现在！");
+                } else {
+                    $("#result").css("font-size", "medium");
+                    $("#result").html(dayDec + hourDec + minDec + secDec);
+                }
+            }, 50);
+        }
+
+        function setNowTime(object, type, value) {
+            var btnVal = $(object).val();
+            if ("设定为当前时间" == btnVal) {
+                $(object).val("取消设定当前时间");
+                if ("from" == type) {
+                    $("#fromFlag").val("true");
+                } else if ("to" == type) {
+                    $("#toFlag").val("true");
+                }
+            }
+            if ("取消设定当前时间" == btnVal) {
+                $(object).val("设定为当前时间");
+                if ("from" == type) {
+                    $("#fromFlag").val("false");
+                } else if ("to" == type) {
+                    $("#toFlag").val("false");
+                }
+            }
+        }
+    </script>
+    <title>日期计算器</title>
+<body bgcolor="EEEEEE" onload="loadOld()">
+    <div class="main">
+        <a>日期计算</a>
+        <br>
+        <a>从</a>
+        <input type="text" id="nowTime" hidden="hidden">
+        <input type="date" id="dateFrom" class="date" value="" />
+        <input type="time" id="timeFrom" class="date" step="1" value="00:00:00" />
+        <input type="button" id="btnFrom" value="设定为当前时间" onclick="setNowTime('#btnFrom', 'from', '00:00:00')" />
+        <input type="text" id="fromFlag" value="false" hidden="hidden" />
+        <br>
+        <a>到</a>
+        <input type="date" id="dateTo" class="date" value="" />
+        <input type="time" id="timeTo" class="date" step="1" value="00:00:00"/>
+        <input type="button" id="btnTo" value="设定为当前时间" onclick="setNowTime('#btnTo', 'to', '00:00:00')" />
+        <input type="text" id="toFlag" value="false" hidden="hidden" />
+        <br>
+        <input type="button" value="相 差" onclick="cal()" />
+        <span id="result"></span>
+    </div>
+</body>
+<br>
+
+</body>
+
+</html>
